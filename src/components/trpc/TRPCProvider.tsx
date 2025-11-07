@@ -1,7 +1,7 @@
-import type { TAppRouter } from "@/src/trpc/router";
+import type { TAppRouter } from "@/trpc/router";
 import { createTRPCContext } from "@trpc/tanstack-react-query";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { makeQueryClient } from "@/src/trpc/query-client";
+import { makeQueryClient } from "@/trpc/query-client";
 import { PropsWithChildren, useState } from "react";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import superjson from "superjson";

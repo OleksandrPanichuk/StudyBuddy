@@ -1,5 +1,5 @@
 import "server-only";
-import { getQueryClient } from "@/src/trpc/server";
+import { getQueryClient } from "@/trpc/server";
 import {
     FetchInfiniteQueryOptions,
     FetchQueryOptions,

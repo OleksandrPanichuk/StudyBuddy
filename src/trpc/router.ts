@@ -1,9 +1,5 @@
-import {createTRPCRouter} from "@/src/trpc/init";
+import { createTRPCRouter } from "@/trpc/init";
 
+export const appRouter = createTRPCRouter({});
 
-export const appRouter = createTRPCRouter({
-
-})
-
-
-export type TAppRouter = typeof appRouter
+export type TAppRouter = typeof appRouter;
