@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/auth.ts">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/auth.ts" />
+              <option name="originalContent" value="import { betterAuth } from &quot;better-auth&quot;;&#10;import { prismaAdapter } from &quot;better-auth/adapters/prisma&quot;;&#10;import { db } from &quot;@/lib/db&quot;;&#10;&#10;export const auth = betterAuth({&#10;    database: prismaAdapter(db, {&#10;        provider: &quot;mongodb&quot;,&#10;    }),&#10;    emailAndPassword: {&#10;        enabled: true,&#10;        requireEmailVerification: true,&#10;        minPasswordLength: 8,&#10;    },&#10;    socialProviders: {&#10;        &#10;    }&#10;});&#10;" />
+              <option name="updatedContent" value="import { betterAuth } from &quot;better-auth&quot;;&#10;import { prismaAdapter } from &quot;better-auth/adapters/prisma&quot;;&#10;import { db } from &quot;@/lib/db&quot;;&#10;&#10;export const auth = betterAuth({&#10;    database: prismaAdapter(db, {&#10;        provider: &quot;mongodb&quot;,&#10;    }),&#10;    emailAndPassword: {&#10;        enabled: true,&#10;        requireEmailVerification: true,&#10;        minPasswordLength: 8,&#10;    },&#10;    socialProviders: {&#10;&#10;    }&#10;});&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

@@ -1,3 +1,4 @@
+"use client";
 import type { TAppRouter } from "@/trpc/router";
 import { createTRPCContext } from "@trpc/tanstack-react-query";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
