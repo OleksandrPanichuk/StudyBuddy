@@ -8,7 +8,7 @@ import { motion } from "motion/react";
 import Link from "next/link";
 
 export const Header = () => {
-    const { data: session, isPending, error } = authClient.useSession();
+    const { data: session, isPending, } = authClient.useSession();
     return (
         <motion.header
             initial={{ y: -20, opacity: 0 }}

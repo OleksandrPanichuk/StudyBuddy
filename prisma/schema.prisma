@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -7,6 +6,12 @@ generator client {
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
 }
 
 model User {
@@ -19,6 +24,7 @@ model User {
   updatedAt     DateTime  @default(now()) @updatedAt
   sessions      Session[]
   accounts      Account[]
+  chats         Chat[]
 
   @@unique([email])
   @@map("user")
@@ -67,4 +73,50 @@ model Verification {
   updatedAt  DateTime @default(now()) @updatedAt
 
   @@map("verification")
+}
+
+model Chat {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  title   String
+  subject String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  messages    Message[]
+  attachments Attachment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Message {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  chat   Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  chatId String @db.ObjectId
+
+  content String
+  role    MessageRole
+
+  attachments Attachment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Attachment {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  message   Message? @relation(fields: [messageId], references: [id])
+  messageId String?  @db.ObjectId
+  chat      Chat?    @relation(fields: [chatId], references: [id])
+  chatId    String?  @db.ObjectId
+
+  url      String
+  fileType String
+  key      String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }

@@ -7,8 +7,6 @@ export async function proxy(request: NextRequest) {
         headers: await headers(),
     });
 
-    console.log({ session });
-
     if (!session) {
         return NextResponse.redirect(new URL("/sign-in", request.url));
     }
@@ -17,5 +15,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/dashboard"],
+    matcher: ["/dashboard", "/d/:path*"],
 };
