@@ -8,12 +8,12 @@ import {
     SidebarTrigger,
     Skeleton,
 } from "@/components/ui";
-import { Bell, Search } from "lucide-react";
 import { UserMenu } from "@/features/dashboard";
+import { Bell, Search } from "lucide-react";
 
 export const DashboardHeader = () => {
     return (
-        <header className="sticky top-0 z-10 flex w-full h-14 items-center justify-between gap-4 border-b bg-background px-6">
+        <header className="sticky top-0 z-10 flex w-full h-[67px] items-center justify-between gap-4 border-b bg-background px-6">
             <SidebarTrigger />
             <div className="relative flex-1 max-w-md">
                 <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />

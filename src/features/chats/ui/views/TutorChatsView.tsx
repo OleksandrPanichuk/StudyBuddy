@@ -1,76 +1,105 @@
 "use client";
 
-import { useState } from "react";
-import {
-    Button,
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui";
+import { useTRPC } from "@/components/trpc/TRPCProvider";
+import { Button } from "@/components/ui";
+import { useInfiniteQueryRef } from "@/hooks";
+import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { MessageSquarePlus, MessagesSquare } from "lucide-react";
-import { NewChatDialog } from "../components";
+import { Suspense, useState } from "react";
+import {
+    ChatsList,
+    ChatsListSkeleton,
+    EmptyChatsState,
+    NewChatDialog,
+} from "../components";
 
-export const TutorChatsView = () => {
+const TutorChatsContent = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+    const trpc = useTRPC();
+
+    const { data, isFetching, isLoading, hasNextPage, fetchNextPage } =
+        useSuspenseInfiniteQuery(
+            trpc.chats.getAll.infiniteQueryOptions(
+                {},
+                {
+                    getNextPageParam: (lastPage) => lastPage.nextCursor,
+                    initialCursor: null,
+                },
+            ),
+        );
+
+    const ref = useInfiniteQueryRef({
+        fetchNextPage,
+        hasNextPage,
+        isLoading,
+        isFetching,
+    });
+
+    const chats = data.pages.flatMap((page) => page.chats);
+
+    const handleEdit = (id: string) => {
+        console.log("Edit chat:", id);
+    };
+
+    const handleDelete = (id: string) => {
+        console.log("Delete chat:", id);
+    };
+
+    if (chats.length === 0) {
+        return (
+            <>
+                <EmptyChatsState onCreateChat={() => setIsDialogOpen(true)} />
+                <NewChatDialog
+                    open={isDialogOpen}
+                    onOpenChange={setIsDialogOpen}
+                />
+            </>
+        );
+    }
+
     return (
-        <div className="flex flex-col gap-6 p-6">
-            {/* Header */}
-            <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight flex items-center gap-3">
-                        <MessagesSquare className="size-8 text-primary" />
-                        AI Tutor Chats
-                    </h1>
-                    <p className="text-muted-foreground mt-1">
-                        Get personalized help from AI tutors on any subject
-                    </p>
-                </div>
+        <>
+            <div className="flex items-center justify-between">
+                <p className="text-sm text-muted-foreground">
+                    {chats.length} conversation{chats.length !== 1 ? "s" : ""}
+                </p>
                 <Button
-                    className="w-fit gap-2"
+                    variant="outline"
+                    size="sm"
+                    className="gap-2"
                     onClick={() => setIsDialogOpen(true)}
                 >
                     <MessageSquarePlus className="size-4" />
                     New Chat
                 </Button>
             </div>
-
-            {/* Empty State or Chat List */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>Your Chats</CardTitle>
-                    <CardDescription>
-                        All your AI tutor conversations in one place
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="flex flex-col items-center justify-center py-12 text-center">
-                        <div className="flex size-20 items-center justify-center rounded-full bg-primary/10 mb-4">
-                            <MessagesSquare className="size-10 text-primary" />
-                        </div>
-                        <h3 className="text-lg font-semibold mb-2">
-                            No chats yet
-                        </h3>
-                        <p className="text-sm text-muted-foreground mb-6 max-w-sm">
-                            Start a new conversation with an AI tutor to get
-                            help with your studies
-                        </p>
-                        <Button
-                            onClick={() => setIsDialogOpen(true)}
-                            variant="outline"
-                            className="gap-2"
-                        >
-                            <MessageSquarePlus className="size-4" />
-                            Create Your First Chat
-                        </Button>
-                    </div>
-                </CardContent>
-            </Card>
-
-            {/* Dialog */}
+            <ChatsList
+                chats={chats}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                infiniteScrollRef={hasNextPage ? ref : undefined}
+            />
             <NewChatDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
+        </>
+    );
+};
+
+export const TutorChatsView = () => {
+    return (
+        <div className="flex flex-col gap-6 p-6">
+            <div>
+                <h1 className="text-3xl font-bold tracking-tight flex items-center gap-3">
+                    <MessagesSquare className="size-8 text-primary" />
+                    AI Tutor Chats
+                </h1>
+                <p className="text-muted-foreground mt-1">
+                    Get personalized help from AI tutors on any subject
+                </p>
+            </div>
+            <Suspense fallback={<ChatsListSkeleton />}>
+                <TutorChatsContent />
+            </Suspense>
         </div>
     );
 };

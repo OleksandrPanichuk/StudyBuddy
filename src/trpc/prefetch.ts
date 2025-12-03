@@ -1,23 +1,15 @@
-import "server-only";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getQueryClient } from "@/trpc/server";
-import {
-    FetchInfiniteQueryOptions,
-    FetchQueryOptions,
-} from "@tanstack/react-query";
+import { TRPCQueryOptions } from "@trpc/tanstack-react-query";
+import "server-only";
 
-export function prefetch<T>(
-    queryOptions: FetchInfiniteQueryOptions<T> | FetchQueryOptions<T>,
+export function prefetch<T extends ReturnType<TRPCQueryOptions<any>>>(
+    queryOptions: T,
 ) {
     const queryClient = getQueryClient();
-
-    if (
-        "getNextPageParam" in queryOptions ||
-        "initialPageParam" in queryOptions
-    ) {
-        void queryClient.prefetchInfiniteQuery(
-            queryOptions as FetchInfiniteQueryOptions<T>,
-        );
+    if (queryOptions.queryKey[1]?.type === "infinite") {
+        void queryClient.prefetchInfiniteQuery(queryOptions as any);
     } else {
-        void queryClient.prefetchQuery(queryOptions as FetchQueryOptions<T>);
+        void queryClient.prefetchQuery(queryOptions);
     }
 }

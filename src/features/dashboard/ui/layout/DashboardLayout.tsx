@@ -7,7 +7,7 @@ export const DashboardLayout = ({ children }: PropsWithChildren) => {
         <SidebarProvider>
             <DashboardSidebar />
             <SidebarInset>
-                <div className="flex flex-col">
+                <div className="flex flex-col h-full">
                     <DashboardHeader />
                     {children}
                 </div>

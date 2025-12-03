@@ -1,6 +1,6 @@
-import { PropsWithChildren } from "react";
-import { getQueryClient } from "@/src/trpc/server";
+import { getQueryClient } from "@/trpc/server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { PropsWithChildren } from "react";
 
 export function HydrateClient({ children }: PropsWithChildren) {
     const queryClient = getQueryClient();
